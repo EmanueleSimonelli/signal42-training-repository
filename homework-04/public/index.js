@@ -30,8 +30,18 @@ function hideLoader() {
 // Navigate while showing the loading indicator. The loader stays visible until
 // the browser replaces the document with the freshly rendered page, which is
 // helpful when a large page size makes the request take a while to come back.
+//
+// If the navigation never completes -- the user presses Stop, the request
+// hangs, or the server never responds -- the document is not replaced and the
+// loader would otherwise stay up forever, locking the whole UI behind the
+// overlay. A safety timeout hides it so the page stays usable. On a successful
+// navigation the JS context is torn down before the timeout fires, so it never
+// interferes with a genuinely slow-but-completing request.
+var NAVIGATION_TIMEOUT_MS = 30000;
+
 function navigate(url) {
     showLoader();
+    setTimeout(hideLoader, NAVIGATION_TIMEOUT_MS);
     location.assign(url);
 }
 
