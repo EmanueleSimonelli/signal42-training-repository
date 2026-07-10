@@ -16,15 +16,11 @@ function getQueryString(page) {
 }
 
 function showLoader() {
-    var loader = document.querySelector('.loader');
-    loader.setAttribute('data-open', '');
-    loader.setAttribute('aria-hidden', 'false');
+    document.querySelector('.loader').setAttribute('data-open', '');
 }
 
 function hideLoader() {
-    var loader = document.querySelector('.loader');
-    loader.removeAttribute('data-open');
-    loader.setAttribute('aria-hidden', 'true');
+    document.querySelector('.loader').removeAttribute('data-open');
 }
 
 // Navigate while showing the loading indicator. The loader stays visible until
@@ -57,7 +53,7 @@ function toggle(modal) {
     if (modal.hasAttribute('data-open')) {
         modal.removeAttribute('data-open');
     } else {
-        document.querySelectorAll('[data-open]').forEach(function(modal) {
+        document.querySelectorAll('.modal[data-open]').forEach(function(modal) {
             modal.removeAttribute('data-open');
         });
         var closer = modal.querySelector('.closer');

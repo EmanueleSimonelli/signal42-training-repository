@@ -197,6 +197,23 @@ button:active, input[type="submit"]:active, a[role="button"]:active {
     height: 1.2em;
     fill: #525252;
 }
+/* Shared show/hide fade for the full-screen overlays (the modals and the
+   loader). Keeping the fade mechanism in one place stops the two overlays'
+   timing from drifting apart. pointer-events is toggled outside the visibility
+   transition so a fading-out overlay stops intercepting clicks immediately,
+   instead of staying clickable for the .2s the visibility change is delayed. */
+.modal, .loader {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s linear, visibility 0s .2s;
+}
+.modal[data-open], .loader[data-open] {
+    visibility: inherit;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity .2s linear;
+}
 .modal {
     position: absolute;
     top: 0;
@@ -210,14 +227,6 @@ button:active, input[type="submit"]:active, a[role="button"]:active {
     padding: 0 1em;
     z-index: 99999;
     box-sizing: border-box;
-    visibility: hidden;
-    transition: opacity .2s linear, visibility 0s .2s;
-    opacity: 0;
-}
-.modal[data-open] {
-    visibility: inherit;
-    transition: opacity .2s linear;
-    opacity: 1;
 }
 .overlay {
     visibility: hidden;
@@ -322,14 +331,6 @@ button:active, input[type="submit"]:active, a[role="button"]:active {
     gap: 1em;
     background: rgba(255, 255, 255, .7);
     z-index: 999999;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity .2s linear, visibility 0s .2s;
-}
-.loader[data-open] {
-    visibility: inherit;
-    opacity: 1;
-    transition: opacity .2s linear;
 }
 .loader-spinner {
     width: 2.6em;
