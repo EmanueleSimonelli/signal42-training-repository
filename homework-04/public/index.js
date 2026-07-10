@@ -15,6 +15,34 @@ function getQueryString(page) {
     return query.map(function (pair) { return pair[0] + '=' + pair[1] }).join('&');
 }
 
+function showLoader() {
+    var loader = document.querySelector('.loader');
+    loader.setAttribute('data-open', '');
+    loader.setAttribute('aria-hidden', 'false');
+}
+
+function hideLoader() {
+    var loader = document.querySelector('.loader');
+    loader.removeAttribute('data-open');
+    loader.setAttribute('aria-hidden', 'true');
+}
+
+// Navigate while showing the loading indicator. The loader stays visible until
+// the browser replaces the document with the freshly rendered page, which is
+// helpful when a large page size makes the request take a while to come back.
+function navigate(url) {
+    showLoader();
+    location.assign(url);
+}
+
+// Hide the loader when the page is restored from the back/forward cache,
+// otherwise it would stay visible after navigating back.
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        hideLoader();
+    }
+});
+
 function toggle(modal) {
     if (modal.hasAttribute('data-open')) {
         modal.removeAttribute('data-open');
@@ -35,7 +63,7 @@ function toggle(modal) {
 
 document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault();
-    location.assign('/sellers?' + getQueryString(0));
+    navigate('/sellers?' + getQueryString(0));
 });
 
 document.querySelector('.filters-opener').addEventListener('click', function(event) {
@@ -66,12 +94,12 @@ document.querySelector('.clear-dates').addEventListener('click', function(event)
 
 document.querySelector('.pagination .prev').addEventListener('click', function(event) {
     event.preventDefault();
-    location.assign('/sellers?' + getQueryString(Math.max(page - 1, 0)));
+    navigate('/sellers?' + getQueryString(Math.max(page - 1, 0)));
 });
 
 document.querySelector('.pagination .next').addEventListener('click', function(event) {
     event.preventDefault();
-    location.assign('/sellers?' + getQueryString(page + 1));
+    navigate('/sellers?' + getQueryString(page + 1));
 });
 
 document.querySelectorAll('.results td:not(:first-child)').forEach(function(result) {
